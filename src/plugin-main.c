@@ -25,14 +25,15 @@ OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
 
 bool obs_module_load(void)
 {
-	obs_log(LOG_INFO, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! plugin loaded successfully (version %s)",
+	obs_log(LOG_INFO,
+		"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! plugin loaded successfully (version %s)",
 		PLUGIN_VERSION);
-  mdns_init();
+	mdns_init();
 	return true;
 }
 
 void obs_module_unload(void)
 {
-  mdns_shutdown();
+	mdns_shutdown();
 	obs_log(LOG_INFO, "plugin unloaded");
 }
