@@ -12,18 +12,22 @@ include(defaults)
 include(helpers)
 
 add_library(${CMAKE_PROJECT_NAME} MODULE)
+add_executable(${CMAKE_PROJECT_NAME}_test src/mdns_test.c)
 
 find_package(libobs REQUIRED)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::libobs)
+target_link_libraries(${CMAKE_PROJECT_NAME}_test PRIVATE OBS::libobs)
 
 if(ENABLE_FRONTEND_API)
   find_package(obs-frontend-api REQUIRED)
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::obs-frontend-api)
+  target_link_libraries(${CMAKE_PROJECT_NAME}_test PRIVATE OBS::obs-frontend-api)
 endif()
 
 if(ENABLE_QT)
   find_package(Qt6 COMPONENTS Widgets Core)
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
+  target_link_libraries(${CMAKE_PROJECT_NAME}_test PRIVATE Qt6::Core Qt6::Widgets)
   target_compile_options(
     ${CMAKE_PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:Clang,AppleClang>:-Wno-quoted-include-in-framework-header
                                   -Wno-comma>)
@@ -39,5 +43,17 @@ target_sources(${CMAKE_PROJECT_NAME}
         src/plugin-main.c
         src/mdns.c
 )
+target_sources(${CMAKE_PROJECT_NAME}_test
+        PRIVATE # cmake-format: sortable
+        src/plugin-main.c
+        src/mdns.c
+)
+target_include_directories(${CMAKE_PROJECT_NAME}_test PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(plugin-support PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
+set_target_properties_plugin(${CMAKE_PROJECT_NAME}_test PROPERTIES OUTPUT_NAME test)
+
+enable_testing()
+add_test(NAME ${CMAKE_PROJECT_NAME}_test COMMAND ${CMAKE_PROJECT_NAME}_test)
+set(CMAKE_BUILD_TYPE Debug)

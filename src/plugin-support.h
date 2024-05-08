@@ -1,6 +1,6 @@
 /*
-Plugin Name
-Copyright (C) <Year> <Developer> <Email Address>
+OBS EasyJoin
+Copyright (C) 2024 Rob Elsner rob@elsner.dev 
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
